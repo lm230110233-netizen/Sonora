@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Modal - Tarjeta de presentación</title>
+    <link rel="stylesheet" href="modal.css" />
+  </head>
+  <body>
+    <button id="botonAbrir" onclick="abrirModal()">Ver tarjeta</button>
+
+    <div id="fondoModal">
+      <div class="tarjeta">
+        <div class="franja">Frida Fernanda Quintero Rosas</div>
+        <p class="dato">Ingeniería en Sistemas Computacionales</p>
+        <p class="dato">7mo semestre</p>
+        <p class="dato">fridafernandaqr@gmail.com</p>
+        <p class="habilidades-titulo">Habilidades</p>
+        <ul class="lista-habilidades">
+          <li>Creatividad</li>
+          <li>Idiomas</li>
+          <li>Liderazgo</li>
+        </ul>
+        <button id="botonCerrar" onclick="cerrarModal()">Cerrar</button>
+      </div>
+    </div>
+
+    <script src="modal.js"></script>
+  </body>
+</html>

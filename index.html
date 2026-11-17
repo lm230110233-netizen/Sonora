@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sonora</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script>
+/* Tokens del sistema: mismos nombres que en el brief (Tailwind v3) */
+tailwind.config = {
+  theme: { extend: {
+    colors: {
+      'surface-base':'var(--surface-base)','surface-raised':'var(--surface-raised)','surface-high':'var(--surface-high)',
+      'line':'var(--line)','line-strong':'var(--line-strong)','ink':'var(--ink)','ink-muted':'var(--ink-muted)',
+      'accent':'var(--accent)','accent-hover':'var(--accent-hover)','on-accent':'var(--on-accent)',
+      'success':'var(--success)','danger':'var(--danger)','focus':'var(--focus)'
+    },
+    fontFamily: { sans:['Manrope','system-ui','sans-serif'], mono:['"JetBrains Mono"','ui-monospace','monospace'] },
+    borderRadius: { sm:'4px', md:'8px', lg:'16px', pill:'999px' },
+    boxShadow: { raise:'0 8px 24px rgb(0 0 0 / 0.4)' }
+  } }
+}
+</script>
+<style>
+:root, [data-theme="dark"] {
+  --surface-base:#0e0e10; --surface-raised:#18181b; --surface-high:#26262b;
+  --line:#3a3a42; --line-strong:#7a7a86; --ink:#f4f2ee; --ink-muted:#a9a9b4;
+  --accent:#ffb020; --accent-hover:#ffc24d; --on-accent:#14110a;
+  --success:#5ec8e5; --danger:#ff6b5b; --focus:#8fd3ff;
+}
+[data-theme="light"] {
+  --surface-base:#faf8f4; --surface-raised:#ffffff; --surface-high:#ece8e0;
+  --line:#d8d4c9; --line-strong:#6b665c; --ink:#17151a; --ink-muted:#55525c;
+  --accent:#a65500; --accent-hover:#8a4500; --on-accent:#ffffff;
+  --success:#00a6df; --danger:#b3261e; --focus:#0b5cad;
+}
+body { background:var(--surface-base); color:var(--ink); font-family:"Manrope",system-ui,sans-serif; }
+:focus-visible { outline:3px solid var(--focus); outline-offset:2px; }
+button, a { transition:background-color 120ms ease, color 120ms ease, box-shadow 120ms ease; }
+@media (prefers-reduced-motion: reduce) { button, a { transition:none; } }
+</style>
+</head>
+<body class="min-h-screen">
+
+<!-- Iconos (24px, trazo redondeado de 2px) -->
+<svg width="0" height="0" class="absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z" fill="currentColor"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" rx="1" fill="currentColor"/><rect x="14" y="4" width="4" height="16" rx="1" fill="currentColor"/></symbol>
+    <symbol id="i-next" viewBox="0 0 24 24"><path d="M5 4l10 8-10 8z" fill="currentColor"/><rect x="17" y="4" width="3" height="16" rx="1" fill="currentColor"/></symbol>
+    <symbol id="i-prev" viewBox="0 0 24 24"><path d="M19 4L9 12l10 8z" fill="currentColor"/><rect x="4" y="4" width="3" height="16" rx="1" fill="currentColor"/></symbol>
+    <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 21s-7-4.6-9.3-9A5.2 5.2 0 0 1 12 6.5 5.2 5.2 0 0 1 21.3 12C19 16.4 12 21 12 21z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+    <symbol id="i-shuffle" viewBox="0 0 24 24"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-volume" viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9zM16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16.5 16.5L21 21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11l9-8 9 8v10h-6v-6H9v6H3z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+    <symbol id="i-library" viewBox="0 0 24 24"><path d="M5 4v16M10 4v16M15 5l5 15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <!-- Marca: cinco barras ecualizadoras -->
+    <symbol id="logo" viewBox="0 0 40 40"><g class="fill-accent"><rect x="3" y="14" width="5" height="16" rx="2.5"/><rect x="11" y="6" width="5" height="28" rx="2.5"/><rect x="19" y="12" width="5" height="20" rx="2.5"/><rect x="27" y="3" width="5" height="34" rx="2.5"/><rect x="35" y="16" width="3" height="12" rx="1.5"/></g></symbol>
+  </defs>
+</svg>
+
+<header class="flex flex-wrap items-center gap-4 border-b border-line bg-surface-raised px-4 py-3 md:px-8">
+  <a href="#inicio" class="flex items-center gap-2 rounded-md">
+    <svg class="h-8 w-8" aria-hidden="true"><use href="#logo"/></svg>
+    <span class="text-xl font-extrabold tracking-tight">Sonora</span>
+  </a>
+  <nav aria-label="Principal" class="order-last flex w-full gap-1 md:order-none md:w-auto md:flex-1 md:gap-2">
+    <a data-nav="inicio" href="#inicio" class="flex flex-1 items-center justify-center gap-2 rounded-pill px-3 py-2 text-sm font-bold text-ink-muted md:flex-none md:px-4 hover:bg-surface-high aria-[current=page]:bg-surface-high aria-[current=page]:text-ink">
+      <svg class="hidden h-6 w-6 sm:block" aria-hidden="true"><use href="#i-home"/></svg>Inicio</a>
+    <a data-nav="buscar" href="#buscar" class="flex flex-1 items-center justify-center gap-2 rounded-pill px-3 py-2 text-sm font-bold text-ink-muted hover:bg-surface-high aria-[current=page]:bg-surface-high aria-[current=page]:text-ink md:flex-none md:px-4">
+      <svg class="hidden h-6 w-6 sm:block" aria-hidden="true"><use href="#i-search"/></svg>Buscar</a>
+    <a data-nav="playlist" href="#playlist" class="flex flex-1 items-center justify-center gap-2 rounded-pill px-3 py-2 text-sm font-bold text-ink-muted md:flex-none md:px-4 hover:bg-surface-high aria-[current=page]:bg-surface-high aria-[current=page]:text-ink">
+      <svg class="hidden h-6 w-6 sm:block" aria-hidden="true"><use href="#i-library"/></svg>Playlist</a>
+    <a data-nav="reproductor" href="#reproductor" class="flex flex-1 items-center justify-center gap-2 rounded-pill px-3 py-2 text-sm font-bold text-ink-muted md:flex-none md:px-4 hover:bg-surface-high aria-[current=page]:bg-surface-high aria-[current=page]:text-ink">
+      <svg class="hidden h-6 w-6 sm:block" aria-hidden="true"><use href="#i-play"/></svg>Reproductor</a>
+  </nav>
+  <button id="tema" type="button" class="rounded-pill border-2 border-line-strong px-4 py-2 text-sm font-bold text-ink hover:bg-surface-high">Tema claro</button>
+</header>
+
+<main class="mx-auto max-w-5xl px-4 pb-32 pt-6 md:px-8">
+
+  <!-- Pantalla: inicio -->
+  <section data-view="inicio" aria-labelledby="t-inicio">
+    <h1 id="t-inicio" class="text-[32px]/[36px] font-extrabold tracking-tight">Buenas tardes</h1>
+    <p class="mt-2 text-sm font-medium text-ink-muted">Tus mezclas, listas para escuchar.</p>
+    <button id="btn-mezcla" type="button" class="mt-4 rounded-pill bg-accent px-6 py-3 text-sm font-bold text-on-accent hover:bg-accent-hover">Reproducir mezcla diaria 1</button>
+    <div id="tarjetas" class="mt-6 grid grid-cols-2 gap-4 md:grid-cols-4"></div>
+    <h2 class="mt-8 text-xl font-bold">Recién escuchado</h2>
+    <div id="recientes" class="mt-3 flex flex-col"></div>
+  </section>
+
+  <!-- Pantalla: buscar -->
+  <section data-view="buscar" aria-labelledby="t-buscar" hidden>
+    <h1 id="t-buscar" class="text-[32px]/[36px] font-extrabold tracking-tight">Buscar</h1>
+    <label for="q" class="sr-only">Buscar canciones o artistas</label>
+    <input id="q" type="search" autocomplete="off" placeholder="¿Qué quieres escuchar?" class="mt-4 w-full rounded-pill border-2 border-line-strong bg-surface-high px-4 py-3 text-sm text-ink placeholder:text-ink-muted">
+    <p id="q-estado" class="mt-4 text-sm font-medium text-ink-muted" role="status"></p>
+    <div id="q-res" class="mt-2 flex flex-col"></div>
+  </section>
+
+  <!-- Pantalla: playlist -->
+  <section data-view="playlist" aria-labelledby="t-playlist" hidden>
+    <div id="chips" class="flex flex-wrap gap-2" role="group" aria-label="Elige una playlist"></div>
+    <div class="mt-6 flex flex-wrap items-end gap-6">
+      <div class="flex h-40 w-40 items-center justify-center rounded-md bg-surface-high"><svg class="h-24 w-24" aria-hidden="true"><use href="#logo"/></svg></div>
+      <div>
+        <p class="text-sm font-medium text-ink-muted" id="pl-tipo">Playlist</p>
+        <h1 id="t-playlist" class="text-[32px]/[36px] font-extrabold tracking-tight"></h1>
+        <p class="mt-1 font-mono text-xs text-ink-muted" id="pl-meta"></p>
+        <button id="btn-pl" type="button" class="mt-4 rounded-pill bg-accent px-6 py-3 text-sm font-bold text-on-accent hover:bg-accent-hover">Reproducir</button>
+      </div>
+    </div>
+    <div id="filas" class="mt-6 flex flex-col"></div>
+  </section>
+
+  <!-- Pantalla: reproductor -->
+  <section data-view="reproductor" aria-labelledby="t-repro" hidden>
+    <div class="grid gap-8 md:grid-cols-[1fr_320px]">
+      <div class="rounded-lg bg-surface-raised p-6 md:p-8">
+        <div class="mx-auto flex aspect-square w-full max-w-xs items-center justify-center rounded-md bg-surface-high"><svg class="h-1/2 w-1/2" aria-hidden="true"><use href="#logo"/></svg></div>
+        <h1 id="t-repro" class="mt-6 text-center text-[32px]/[36px] font-extrabold tracking-tight"></h1>
+        <p class="mt-1 text-center text-sm font-medium text-ink-muted" id="r-art"></p>
+        <div class="mt-6 flex items-center gap-3">
+          <span class="tiempo font-mono text-xs text-ink-muted">00:00</span>
+          <div class="h-1 flex-1 rounded-pill bg-surface-high" role="progressbar" aria-label="Progreso de la canción"><div class="fill h-1 rounded-pill bg-accent" style="width:0%"></div></div>
+          <span class="total font-mono text-xs text-ink-muted">00:00</span>
+        </div>
+        <div class="mt-4 flex items-center justify-center gap-4">
+          <button type="button" aria-label="Aleatorio" id="b-shuffle" aria-pressed="false" class="rounded-pill p-3 text-ink-muted hover:bg-surface-high aria-pressed:text-ink"><svg class="h-6 w-6"><use href="#i-shuffle"/></svg></button>
+          <button type="button" aria-label="Anterior" class="b-prev rounded-pill p-3 text-ink hover:bg-surface-high"><svg class="h-6 w-6"><use href="#i-prev"/></svg></button>
+          <button type="button" aria-label="Reproducir" class="b-play rounded-pill bg-accent p-4 text-on-accent hover:bg-accent-hover"><svg class="h-6 w-6"><use href="#i-play"/></svg></button>
+          <button type="button" aria-label="Siguiente" class="b-next rounded-pill p-3 text-ink hover:bg-surface-high"><svg class="h-6 w-6"><use href="#i-next"/></svg></button>
+          <button type="button" aria-label="Me gusta" id="b-like" aria-pressed="false" class="rounded-pill p-3 text-ink-muted hover:bg-surface-high aria-pressed:text-ink"><svg class="h-6 w-6"><use href="#i-heart"/></svg></button>
+        </div>
+      </div>
+      <div>
+        <h2 class="text-xl font-bold">En cola</h2>
+        <div id="cola" class="mt-3 flex flex-col"></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Barra del reproductor (inicio y playlist) -->
+<div id="barra" class="fixed inset-x-0 bottom-0 border-t border-line bg-surface-raised px-4 py-3 md:px-8">
+  <div class="mx-auto flex max-w-5xl flex-wrap items-center gap-4">
+    <div class="min-w-0 flex-1">
+      <p class="b-titulo truncate text-sm font-bold"></p>
+      <p class="b-artista truncate text-xs font-medium text-ink-muted"></p>
+    </div>
+    <div class="flex items-center gap-2">
+      <button type="button" aria-label="Anterior" class="b-prev rounded-pill p-2 text-ink hover:bg-surface-high"><svg class="h-6 w-6"><use href="#i-prev"/></svg></button>
+      <button type="button" aria-label="Reproducir" class="b-play rounded-pill border-2 border-line-strong p-2 text-ink hover:bg-surface-high"><svg class="h-6 w-6"><use href="#i-play"/></svg></button>
+      <button type="button" aria-label="Siguiente" class="b-next rounded-pill p-2 text-ink hover:bg-surface-high"><svg class="h-6 w-6"><use href="#i-next"/></svg></button>
+    </div>
+    <div class="flex w-full items-center gap-3 md:w-72">
+      <span class="tiempo font-mono text-xs text-ink-muted">00:00</span>
+      <div class="h-1 flex-1 rounded-pill bg-surface-high"><div class="fill h-1 rounded-pill bg-accent" style="width:0%"></div></div>
+      <span class="total font-mono text-xs text-ink-muted">00:00</span>
+    </div>
+  </div>
+</div>
+
+<script>
+/* Datos de ejemplo inventados: 8 canciones y 4 playlists */
+const canciones = [
+  { titulo:"Noches de lluvia", artista:"Mar Abierto",  dur:258 },
+  { titulo:"Hora azul",        artista:"Luz de Norte", dur:232 },
+  { titulo:"Cuerdas",          artista:"Estudio Cinco", dur:307 },
+  { titulo:"Caminos",          artista:"Mar Abierto",  dur:209 },
+  { titulo:"Sin prisa",        artista:"Luz de Norte", dur:244 },
+  { titulo:"Faro",             artista:"Cielo Bajo",   dur:275 },
+  { titulo:"Ceniza tibia",     artista:"Estudio Cinco", dur:191 },
+  { titulo:"Mapa de sal",      artista:"Cielo Bajo",   dur:263 }
+];
+const listas = [
+  { nombre:"Mezcla diaria 1", tipo:"Para ti",  pistas:[0,1,3,4,5] },
+  { nombre:"Lluvia y calma",  tipo:"Playlist", pistas:[0,2,6,7] },
+  { nombre:"Sin prisa",       tipo:"Playlist", pistas:[4,3,1,7] },
+  { nombre:"Caminos largos",  tipo:"Playlist", pistas:[3,5,2,6,0] }
+];
+
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const fmt = s => `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
+const sumaDur = l => l.pistas.reduce((a, i) => a + canciones[i].dur, 0);
+
+let L = 0, k = 0, t = 0, timer = null, sonando = false, verLista = 0;
+const actual = () => canciones[listas[L].pistas[k]];
+
+/* Reproducción simulada (sin audio real) */
+function reproducir() {
+  clearInterval(timer); sonando = true;
+  timer = setInterval(() => {
+    t++;
+    if (t >= actual().dur) { siguiente(); return; }
+    pintarProgreso();
+  }, 1000);
+  pintarEstado();
+}
+function pausar() { clearInterval(timer); sonando = false; pintarEstado(); }
+function alternar() { sonando ? pausar() : reproducir(); }
+function elegir(l, pos) { L = l; k = pos; t = 0; reproducir(); pintarTodo(); }
+function siguiente() { k = (k + 1) % listas[L].pistas.length; t = 0; if (sonando) reproducir(); pintarTodo(); }
+function anterior() { if (t > 3) { t = 0; } else { k = (k - 1 + listas[L].pistas.length) % listas[L].pistas.length; t = 0; } pintarTodo(); }
+
+/* Reproduce una canción: busca primero en la lista actual y luego en las demás */
+function reproducirCancion(i) {
+  let l = listas[L].pistas.includes(i) ? L : listas.findIndex(x => x.pistas.includes(i));
+  elegir(l, listas[l].pistas.indexOf(i));
+}
+/* Búsqueda por título o artista, sin distinguir acentos */
+const limpiar = x => x.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase().trim();
+function pintarBusqueda() {
+  const q = limpiar($("#q").value), est = $("#q-estado"), res = $("#q-res");
+  if (!q) { est.textContent = "Escribe el título de una canción o el nombre de un artista."; res.innerHTML = ""; return; }
+  const ids = canciones.map((c, i) => i).filter(i => limpiar(canciones[i].titulo + " " + canciones[i].artista).includes(q));
+  est.textContent = ids.length ? `${ids.length} ${ids.length === 1 ? "resultado" : "resultados"}` : `No hay resultados para «${$("#q").value.trim()}». Prueba con otro título o artista.`;
+  res.innerHTML = ids.map((i, p) => fila(i, p, -1, listas[L].pistas[k] === i).replace(`data-l="-1" data-k="${p}"`, `data-cancion="${i}"`)).join("");
+}
+$("#q").addEventListener("input", pintarBusqueda);
+
+/* Pintado */
+function icono(n) { return `<svg class="h-6 w-6" aria-hidden="true"><use href="#i-${n}"/></svg>`; }
+function pintarProgreso() {
+  const c = actual();
+  $$(".fill").forEach(e => e.style.width = `${(t / c.dur) * 100}%`);
+  $$(".tiempo").forEach(e => e.textContent = fmt(t));
+  $$(".total").forEach(e => e.textContent = fmt(c.dur));
+}
+function pintarEstado() {
+  $$(".b-play").forEach(b => {
+    b.innerHTML = icono(sonando ? "pause" : "play");
+    b.setAttribute("aria-label", sonando ? "Pausar" : "Reproducir");
+  });
+}
+function fila(i, pos, lista, actualFila) {
+  const c = canciones[i];
+  return `<button type="button" data-l="${lista}" data-k="${pos}" aria-current="${actualFila}" class="grid w-full grid-cols-[24px_1fr_auto] items-center gap-3 rounded-md px-2 py-3 text-left hover:bg-surface-high aria-[current=true]:bg-surface-high">
+    <span class="font-mono text-xs text-ink-muted">${String(pos + 1).padStart(2, "0")}</span>
+    <span class="min-w-0"><span class="block truncate text-sm font-bold">${c.titulo}</span><span class="block truncate text-sm font-medium text-ink-muted">${c.artista}</span></span>
+    <span class="font-mono text-xs text-ink-muted">${fmt(c.dur)}</span></button>`;
+}
+function pintarTodo() {
+  const c = actual();
+  $$(".b-titulo").forEach(e => e.textContent = c.titulo);
+  $$(".b-artista").forEach(e => e.textContent = c.artista);
+  $("#t-repro").textContent = c.titulo;
+  $("#r-art").textContent = `${c.artista} · ${listas[L].nombre}`;
+  $("#tarjetas").innerHTML = listas.map((l, n) => `
+    <button type="button" data-ver="${n}" class="rounded-md bg-surface-raised p-4 text-left hover:bg-surface-high hover:shadow-raise">
+      <span class="flex aspect-square items-center justify-center rounded-md bg-surface-high"><svg class="h-1/2 w-1/2" aria-hidden="true"><use href="#logo"/></svg></span>
+      <span class="mt-3 block text-xl font-bold">${l.nombre}</span>
+      <span class="block text-sm font-medium text-ink-muted">${l.tipo}</span>
+      <span class="block font-mono text-xs text-ink-muted">${fmt(sumaDur(l))}</span></button>`).join("");
+  $("#recientes").innerHTML = [2, 5, 6, 7].map((i, p) => {
+    const aqui = listas[L].pistas[k] === i;
+    return fila(i, p, -1, aqui).replace(`data-l="-1" data-k="${p}"`, `data-cancion="${i}"`);
+  }).join("");
+  $("#chips").innerHTML = listas.map((l, n) => `<button type="button" data-chip="${n}" aria-pressed="${n === verLista}" class="rounded-pill bg-surface-high px-4 py-2 text-xs font-bold uppercase tracking-wider text-ink aria-pressed:bg-accent aria-pressed:text-on-accent">${l.nombre}</button>`).join("");
+  const v = listas[verLista];
+  $("#t-playlist").textContent = v.nombre;
+  $("#pl-tipo").textContent = v.tipo;
+  $("#pl-meta").textContent = `${v.pistas.length} canciones / ${fmt(sumaDur(v))}`;
+  $("#filas").innerHTML = v.pistas.map((i, p) => fila(i, p, verLista, L === verLista && k === p)).join("");
+  $("#cola").innerHTML = listas[L].pistas.map((i, p) => fila(i, p, L, p === k)).join("");
+  pintarBusqueda(); pintarProgreso(); pintarEstado();
+}
+
+/* Navegación entre pantallas con el hash */
+function ruta() {
+  const v = ["inicio", "buscar", "playlist", "reproductor"].includes(location.hash.slice(1)) ? location.hash.slice(1) : "inicio";
+  $$("[data-view]").forEach(s => s.hidden = s.dataset.view !== v);
+  $$("[data-nav]").forEach(a => a.dataset.nav === v ? a.setAttribute("aria-current", "page") : a.removeAttribute("aria-current"));
+  $("#barra").hidden = v === "reproductor";
+}
+addEventListener("hashchange", ruta);
+
+/* Eventos */
+document.addEventListener("click", e => {
+  const b = e.target.closest("button"); if (!b) return;
+  if (b.classList.contains("b-play")) return alternar();
+  if (b.classList.contains("b-next")) return siguiente();
+  if (b.classList.contains("b-prev")) return anterior();
+  if (b.dataset.ver) { verLista = +b.dataset.ver; pintarTodo(); location.hash = "playlist"; return; }
+  if (b.dataset.chip) { verLista = +b.dataset.chip; return pintarTodo(); }
+  if (b.dataset.cancion) return reproducirCancion(+b.dataset.cancion);
+  if (b.dataset.l !== undefined && b.dataset.k !== undefined) return elegir(+b.dataset.l, +b.dataset.k);
+  if (b.id === "btn-mezcla") { elegir(0, 0); location.hash = "reproductor"; return; }
+  if (b.id === "btn-pl") { elegir(verLista, 0); location.hash = "reproductor"; return; }
+  if (b.id === "b-shuffle" || b.id === "b-like") b.setAttribute("aria-pressed", b.getAttribute("aria-pressed") !== "true");
+});
+$("#tema").addEventListener("click", () => {
+  const claro = document.documentElement.dataset.theme !== "light";
+  document.documentElement.dataset.theme = claro ? "light" : "dark";
+  $("#tema").textContent = claro ? "Tema oscuro" : "Tema claro";
+  try { localStorage.setItem("sonora-tema", claro ? "light" : "dark"); } catch (e) {}
+});
+try {
+  if (localStorage.getItem("sonora-tema") === "light") { document.documentElement.dataset.theme = "light"; $("#tema").textContent = "Tema oscuro"; }
+} catch (e) {}
+
+pintarTodo(); ruta();
+</script>
+</body>
+</html>
